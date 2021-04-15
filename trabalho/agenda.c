@@ -2,15 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// protótipos
-void Menu(void);
-void Insert(InfoList * contactList);
-void Delete(InfoList * contactList);
-void Search(InfoList * contactList);
-void List(InfoList * contactList);
-void EndProgram(InfoList * contactList, void * pBuffer);
-void PressEnter(void);
-
 // structs
 typedef struct contact { //dados
     char name[10];
@@ -29,6 +20,15 @@ typedef struct info { //sentinela
     Item * first;
     Item * last;
 } InfoList; 
+
+// protótipos
+void Menu(void);
+void Insert(InfoList * contactList);
+void Delete(InfoList * contactList);
+void Search(InfoList * contactList);
+void List(InfoList * contactList);
+void EndProgram(InfoList * contactList, void * pBuffer);
+void PressEnter(void);
 
 // principal
 int main() {
