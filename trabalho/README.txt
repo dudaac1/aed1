@@ -12,6 +12,7 @@ Implementar a base de dados da agenda usando lista duplamente ligada.
 # DIRETÓRIOS
     |-- trabalho
     |   ∟ agenda.c
+    |   ∟ teste.txt
 
 # EXECUTANDO OS PROGRAMAS (compilação manual)
 Para executar os arquivos, você precisa dos arquivos em seu PC.
@@ -21,8 +22,12 @@ Abra o terminal na pasta onde está localizado o arquivo .c.
 Compile o programa (gcc nomeArquivo.c -o nomeArquivo.exe).
 Execute o programa (.\nomeArquivo.exe).
 
+Você também pode utilizar os arquivos de teste.txt presentes em cada pasta.
+Para isso, baixe-os e, na hora de executar o programa, coloque o seguinte comando: .\nomeArquivo.exe < teste.txt
+
 # OBSERVAÇÕES
-Trabalho ainda em desenvolvimento. (Ou seja, provavelmente não tá funcionando.)
+Trabalho ainda em desenvolvimento. Apenas a função Insert e EndProgram foram 100% implementadas.
+Em testes iniciais, o programa não apresenta erros de leak de memória. (Checado através do DrMemory).
 
 ___________________________________
 Eduarda A. Carvalho (eduarda.carvalho@inf.ufpel.edu.br).

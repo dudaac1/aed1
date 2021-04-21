@@ -23,48 +23,69 @@ typedef struct info { //sentinela
 
 // protótipos
 void Menu(void);
-void Insert(InfoList * contactList);
-void Delete(InfoList * contactList);
-void Search(InfoList * contactList);
-void List(InfoList * contactList);
-void EndProgram(InfoList * contactList, void * pBuffer);
+void Insert(void * pBuffer);
+void Delete(void * pBuffer);
+void * Search(void * pBuffer);
+void List(void * pBuffer);
+void * EndProgram(void * pBuffer);
 void PressEnter(void);
 
 // principal
 int main() {
-    InfoList * contactList;
-    contactList->quant = 0;
-    contactList->first = NULL;
+    printf("InfoList size: %d\n", sizeof(InfoList));
+    printf("char size: %d\n", sizeof(char));
+    printf("Contact size: %d\n", sizeof(Contact));
+    printf("Item size: %d\n", sizeof(Item));
 
     void * pBuffer;
-    pBuffer = malloc(sizeof(char));
-    if (pBuffer == NULL)
+    pBuffer = malloc(sizeof(InfoList) + sizeof(char) * 11 + sizeof(int) + sizeof(Contact));
+    // InfoList contactList + char option + int i + char nome[10] + Contact contato
+    if (!pBuffer)
     {
         printf("Desculpa, tivemos um problema.\n");
         exit(1);
     }
 
-    char * option = pBuffer;
+    InfoList * contactList;
+    contactList = pBuffer;
+    (*contactList).first = NULL;
+    (*contactList).last = NULL;
+    (*contactList).quant = 0;
+
+    char * option = (pBuffer + sizeof(InfoList));
     do {
         Menu();
         scanf(" %c", option);
+        getchar();
         switch (*option) {
             case '1':
                 printf("Inserindo contato...\n");
-                Insert(contactList);
+                Insert(pBuffer);
+                break;
             case '2':
                 printf("Removendo contato...\n");
-                Delete(contactList);
+                Delete(pBuffer);
+                break;
             case '3':
                 printf("Buscando contato...\n");
-                Search(contactList);
+                pBuffer = Search(pBuffer);
+                // int * searchValue = pBuffer(espaço do valor de retorno);
+                //se busca = 0, não achou
+                // if  (!*busca) print("Contato nao foi encontrado.\n");
+                // else ...
+                //se busca = 1, então Contact * searchContact = pBuffer(espaço do Contact)
+                break;
             case '4':
                 printf("Listando contatos...\n");
-                List(contactList);
+                List(pBuffer);
+                break;
             case '5':
-                EndProgram(contactList, pBuffer);
+                pBuffer = EndProgram(pBuffer);
                 free(pBuffer);
                 exit(0);
+            default:
+                printf("Opcao nao reconhecida.\n");
+                PressEnter();
         }
     } while (*option != '5');
 }
@@ -79,37 +100,99 @@ void Menu() {
     printf("Insira sua escolha: ");
 }
 
-void Insert(InfoList * contactList) {
-    // inserir contato
+void Insert(void * pBuffer) {
+    InfoList * contactList = pBuffer;
+
+    Contact * contact = (pBuffer + sizeof(InfoList) + sizeof(char)*11 + sizeof(int));
+    printf("Insira nome: ");
+    scanf(" %s", contact->name );
+    getchar();
+    printf("Insira idade: ");
+    scanf("%d", &contact->age);
+    while (contact->age < 0) {
+        printf("Idade e positiva. Insira outro valor: ");
+        scanf("%d", &contact->age);
+    }
+    getchar();
+    printf("Insira telefone: ");
+    scanf("%ld", &contact->phone);
+    getchar();
+
+    if (!contactList->quant) { //se quant = 0
+        contactList->first = (Item *)malloc(sizeof(Item));
+        if(!contactList->first) {
+            printf("Desculpa, tivemos um problema.\n");
+            exit(1);
+        }
+        strcpy(contactList->first->data.name, contact->name);
+        contactList->first->data.age = contact->age;
+        contactList->first->data.phone = contact->phone;
+        contactList->first->next = NULL;
+        contactList->first->prev = NULL;
+        contactList->last = contactList->first;
+    } else {
+        Item * novoContato = (Item *)malloc(sizeof(Item));
+        if (!novoContato) {
+            printf("Desculpa, tivemos um problema.\n");
+                exit(1);
+        }
+        strcpy(novoContato->data.name, contact->name);
+        novoContato->data.age = contact->age;
+        novoContato->data.phone = contact->phone;
+        novoContato->next = NULL; //novo contato adicionado no final, então n aponta para ninguem a seguir
+
+        if (contactList->quant == 1) { //se quant = 1
+            contactList->first->next = novoContato; //primeiro contato aponta para novo contato
+            novoContato->prev = contactList->first; //anterior de novo contato aponta para primeiro
+        } else { //se quant > 1
+            novoContato->prev = contactList->last; //anterior de novo contato aponta pro ultimo
+            contactList->last->next = novoContato; //prox do ultimo contato aponta para novo [ultimo] contato
+        }
+        contactList->last = novoContato; //adiciona o novo contato sempre no final
+    }
+    contactList->quant++;
 }
 
-void Delete(InfoList * contactList) {
-    if (contactList == NULL) {
+void Delete(void * pBuffer) {
+    // infolist contactlist + char option + int i + char nome[10] + Contact contato
+    InfoList * contactList = pBuffer;
+    if (contactList->quant == 0) {
         printf("Nenhum contato para deletar.\n");
     }
     // remover contato
 }
 
-void Search(InfoList * contactList) {
-    if (contactList == NULL) {
+void * Search(void * pBuffer) {
+    InfoList * contactList = pBuffer;
+    if (contactList->quant == 0) {
         printf("Nenhum contato para buscar.\n");
     }
     // procurar contato
+    return pBuffer;
 }
 
-void List(InfoList * contactList) {
-    if (contactList == NULL) {
+void List(void * pBuffer) {
+    InfoList * contactList = pBuffer;
+    if (contactList->quant == 0) {
         printf("Nenhum contato para listar.\n");
+        return;
+    }
+    if (contactList->first == contactList->last) {
+        printf("Voce possui %d contato armazenado da sua agenda.\n");
     }
     // listar contatos
 }
 
-void EndProgram(InfoList * contactList, void * pBuffer) {
+void * EndProgram(void * pBuffer) {
     printf("Tchau!\n");
-    // if (contactList != NULL) {
-    //      for (etc etc etc)
-    // }
-    // free nos nodos
+    InfoList * contactList = pBuffer;
+    Item * nextContact;
+    while (contactList->first != NULL) {
+        nextContact = contactList->first->next;
+        free(contactList->first);
+        contactList->first = nextContact;
+    }
+    return pBuffer;
 }
 
 void PressEnter() {
