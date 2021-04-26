@@ -26,8 +26,8 @@ Você também pode utilizar os arquivos de teste.txt presentes em cada pasta.
 Para isso, baixe-os e, na hora de executar o programa, coloque o seguinte comando: .\nomeArquivo.exe < teste.txt
 
 # OBSERVAÇÕES
-Trabalho ainda em desenvolvimento. Apenas a função Insert e EndProgram foram 100% implementadas.
-Em testes iniciais, o programa não apresenta erros de leak de memória. (Checado através do DrMemory).
+Tive um pouco de dificuldade de implementar a função Delete, pois em versões anteriores com exercícios semelhantes, eu utilizava a função Buscar/Search para retornar os dados os quais seriam removidos. Neste trabalho, as função Delete e Search estão isoladas uma da outra, cada uma fazendo a busca por si.
+Também tive um pouco de dificuldade para implementar a função de ordenar a lista e acabei por desenvolver uma função que trocasse apenas o conteúdo (nome, idade e telefone) de nodo, sem mexer nos ponteiros referentes aos nodos anteriores ou seguintes.
 
 ___________________________________
 Eduarda A. Carvalho (eduarda.carvalho@inf.ufpel.edu.br).
