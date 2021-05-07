@@ -34,36 +34,40 @@ int main()
         novoNodo->filhoEsq = NULL;
         novoNodo->filhoDir = NULL;
         novoNodo->conteudo = (rand() % 100); //numeros de 0 a 100;
-        InserirNodo(&raiz, novoNodo); //inserindo nodo na árvore
-        balancear(&raiz); //????
+        InserirNodo(&raiz, novoNodo);        //inserindo nodo na árvore
+        //balancear(&raiz); //????
         printf("Nodo %d inserido.\n", novoNodo->conteudo);
     }
 }
 
-void InserirNodo(Nodo **tracer, Nodo *novoNodo)
+void InserirNodo(Nodo **nodoAtual, Nodo *novoNodo)
 {
-    if (!(*tracer))
+    if (!(*nodoAtual))
         novoNodo->pai = NULL;
 
-    while (*tracer)
-    { //tracer != NULL
-        novoNodo->pai = *tracer;
-        if (novoNodo->conteudo >= (*tracer)->conteudo)
-            tracer = &(*tracer)->filhoDir;
+    while (*nodoAtual)
+    { //nodoAtual != NULL
+        novoNodo->pai = *nodoAtual;
+        if (novoNodo->conteudo >= (*nodoAtual)->conteudo)
+            nodoAtual = &(*nodoAtual)->filhoDir;
         else
-            tracer = &(*tracer)->filhoEsq;
+            nodoAtual = &(*nodoAtual)->filhoEsq;
     }
-    *tracer = novoNodo;
-    // balancear(&(*tracer)->pai); // balancear a arvore - não tá funcionando direito
+    *nodoAtual = novoNodo;
+    balancear(&(*nodoAtual)->pai); // balancear a arvore - não tá funcionando direito
 }
 
-void balancear(Nodo **nodoRaiz)
+void balancear(Nodo **nodoAtual)
 {
-    int fatorBalanc = calcularFatorBalanc(*nodoRaiz);
-    if (fatorBalanc > 1)
-        balancearEsq(nodoRaiz);
-    else if (fatorBalanc < -1)
-        balancearDir(nodoRaiz);
+    while (*nodoAtual != NULL)
+    {
+        int fatorBalanc = calcularFatorBalanc(*nodoAtual);
+        if (fatorBalanc > 1)
+            balancearEsq(nodoAtual);
+        else if (fatorBalanc < -1)
+            balancearDir(nodoAtual);
+        nodoAtual = &(*nodoAtual)->pai;
+    };
 }
 
 int calcularFatorBalanc(Nodo *nodoRaiz)
@@ -120,22 +124,28 @@ void rotarEsq(Nodo **nodoRaiz)
 {
     Nodo *aux;
     aux = (*nodoRaiz)->filhoDir;           //aux = filho a direita
-    (*nodoRaiz)->filhoDir = aux->filhoEsq; //o filho da direita = NULL
-    aux->pai = (*nodoRaiz)->pai;           //pai de aux = pai de raiz
-    aux->filhoEsq = (*nodoRaiz);           //testar - o filho de aux = raiz
-    (*nodoRaiz) = aux;
-    aux->filhoEsq->pai = aux; //testar - pai do filho a esquerda = 2
-    aux->filhoDir->pai = aux; //testar - pai do filho a direita = 2
+    (*nodoRaiz)->filhoDir = aux->filhoEsq; //filho da direita da raiz = NULL
+    aux->filhoEsq = (*nodoRaiz);           //filho esquerdo de aux = raiz
+
+    //isso não tá funcionando direito, o programa fica num loop depois quando volta para balancear()
+    aux->pai = aux->filhoEsq->pai;
+
+    if (aux->filhoEsq != NULL)
+        aux->filhoEsq->pai = aux; //pai do filho a esq = aux (nova raiz)
+    *nodoRaiz = aux;
 }
 
 void rotarDir(Nodo **nodoRaiz)
 {
     Nodo *aux;
-    aux = (*nodoRaiz)->filhoEsq;
-    (*nodoRaiz)->filhoEsq = aux->filhoDir;
-    aux->pai = (*nodoRaiz)->pai; //testar
-    aux->filhoDir = (*nodoRaiz);
-    (*nodoRaiz) = aux;
-    aux->filhoEsq->pai = aux; //testar
-    aux->filhoDir->pai = aux; //testar
+    aux = (*nodoRaiz)->filhoEsq;           //aux - filho a esquerda
+    (*nodoRaiz)->filhoEsq = aux->filhoDir; //filho da direita da raiz = null
+    aux->filhoDir = (*nodoRaiz);           //filho direito de aux = raiz
+
+    //isso não tá funcionando direito, o programa fica num loop depois quando volta para balancear()
+    aux->pai = aux->filhoDir->pai;
+
+    if (aux->filhoDir != NULL)
+        aux->filhoDir->pai = aux; //pai do filho a dir = aux (nova raiz)
+    *nodoRaiz = aux;
 }
