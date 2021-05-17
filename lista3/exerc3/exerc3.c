@@ -130,9 +130,10 @@ void opcao2()
     getchar();
 
     //remover valores que causem as 4 rotacoes
-    int valoresRemover[] = {65, 21, 12, 18}; //RSD, RDE, RSE, RDD
+    // int valoresRemover[] = {65, 21, 12, 18}; //RSD, RDE, RSE, RDD
+    int valoresRemover[] = {34, 17};
     printf("Nodos para remocao: ");
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 2; i++)
     {
         BOOLEAN lixo = removerNodo(&raiz, valoresRemover[i]);
         printf("%d ", valoresRemover[i]);
@@ -207,7 +208,7 @@ BOOLEAN removerNodo(Nodo **nodoAtual, int valor)
         if (removerNodo(&(*nodoAtual)->filhoEsq, valor))
         {
             int fatorBalanc = calcularFatorBalanc(*nodoAtual);
-            fatorBalanc = fatorBalanc >= 0 ? fatorBalanc : fatorBalanc * -1;
+            fatorBalanc = fatorBalanc >= 0 ? fatorBalanc : fatorBalanc * -1; //função retorna valores negativos
             if (fatorBalanc >= 2)
             { //comparando altura das arvores do filho a direita
                 if (alturaArvore((*nodoAtual)->filhoDir->filhoEsq) <= alturaArvore((*nodoAtual)->filhoDir->filhoDir))
@@ -225,10 +226,8 @@ BOOLEAN removerNodo(Nodo **nodoAtual, int valor)
     {
         if (removerNodo(&(*nodoAtual)->filhoDir, valor))
         {
-
             int fatorBalanc = calcularFatorBalanc(*nodoAtual);
-            fatorBalanc = fatorBalanc >= 0 ? fatorBalanc : fatorBalanc * -1;
-
+            fatorBalanc = fatorBalanc >= 0 ? fatorBalanc : fatorBalanc * -1; //função retorna valores negativos
             if (fatorBalanc >= 2)
             { //comparando altura das arvores do filho a esquerda
                 if (alturaArvore((*nodoAtual)->filhoEsq->filhoDir) <= alturaArvore((*nodoAtual)->filhoEsq->filhoEsq))
@@ -256,11 +255,9 @@ BOOLEAN removerNodo(Nodo **nodoAtual, int valor)
         }
         else
         { //se tiver 2 filhos
-            Nodo *aux = procuraMaior((*nodoAtual)->filhoEsq);
-            (*nodoAtual)->conteudo = aux->conteudo;
-            //*nodoAtual = aux; //sera q funciona
-            removerNodo(&(*nodoAtual)->filhoEsq, (*nodoAtual)->conteudo);
-            //removerNodo(&(*nodoAtual)->filhoDir, aux->conteudo); //sera q funciona
+            Nodo *aux = procuraMaior((*nodoAtual)->filhoEsq); 
+            (*nodoAtual)->conteudo = aux->conteudo; //como contornar?
+            removerNodo(&(*nodoAtual)->filhoEsq, (*nodoAtual)->conteudo); 
 
             if (calcularFatorBalanc(*nodoAtual) >= 2)
             {
