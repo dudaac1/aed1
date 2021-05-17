@@ -130,8 +130,7 @@ void opcao2()
     getchar();
 
     //remover valores que causem as 4 rotacoes
-    // int valoresRemover[] = {65, 21, 12, 18}; //RSD, RDE, RSE, RDD
-    int valoresRemover[] = {34, 17};
+    int valoresRemover[] = {65, 21, 12, 18}; //RSD, RDE, RSE, RDD
     printf("Nodos para remocao: ");
     for (int i = 0; i < 2; i++)
     {
@@ -335,7 +334,6 @@ int alturaArvore(Nodo *nodoAtual)
 
 BOOLEAN balancearEsq(Nodo **nodoRaiz)
 {
-    //a linha abaixo ta detonando meu codigo de remoção
     int fbEsq = calcularFatorBalanc((*nodoRaiz)->filhoEsq);
     if (fbEsq > 0)
     { //rotação simples
