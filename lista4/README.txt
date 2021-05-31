@@ -17,9 +17,6 @@ Abra o terminal na pasta onde está localizado o arquivo .c.
 Compile o programa (gcc nomeArquivo.c -o nomeArquivo.exe).
 Execute o programa (.\nomeArquivo.exe).
 
-Você também pode utilizar o arquivo de teste.txt presente na pasta do exercício 3.
-Para isso, baixe o arquivo e, na hora de executar o programa, coloque o seguinte comando: .\nomeArquivo.exe < teste.txt
-
 # OBSERVAÇÕES
 Foi utilizado o algoritmo 8 do link disponibilizado para o calculo de tempo.
 
