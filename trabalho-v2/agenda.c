@@ -32,8 +32,8 @@ int main() {
   }
 
   *(int *)(pBuffer + sizeof(char)*11 + sizeof(int)) = 0; // quantPessoas = 0
-  *(void **)(pBuffer + sizeof(char)*11 + sizeof(int)*2) = NULL; // *cabeça = NULL
-  *(void **)(pBuffer + sizeof(char)*11 + sizeof(int)*2 + sizeof(char *)) = NULL; // *nome1Fila = NULL
+  *(char **)(pBuffer + sizeof(char)*11 + sizeof(int)*2) = NULL; // *nome1Lista = NULL
+  *(char **)(pBuffer + sizeof(char)*11 + sizeof(int)*2 + sizeof(char *)) = NULL; // *nome1Fila = NULL
 
   char *escolha = pBuffer;
   do {
@@ -85,6 +85,7 @@ void * inserir(void * pBuffer) {
     printf("lista vazia\n");
   }
 
+
   //recebendo dados da nova pessoa
   //char nome[10]; int idade; long int telefone; void * proximo; void * anterior;
   void * pessoa = malloc(sizeof(char)*10 + sizeof(int) + sizeof(long int) + sizeof(void *)*2);
@@ -94,8 +95,8 @@ void * inserir(void * pBuffer) {
   scanf("%d", (int*)(pessoa + sizeof(char)*10));
   printf("Insira telefone:");
   scanf("%ld", (long int*)(pessoa + sizeof(char)*10 + sizeof(int)));
-  *(void**)(pessoa + sizeof(char)*10 + sizeof(int) + sizeof(long int)) = NULL; //prox = NULL
-  *(void**)(pessoa + sizeof(char)*10 + sizeof(int) + sizeof(long int) + sizeof(void*)) = NULL; //anterior = NULL
+  *(void**)(pessoa + sizeof(char)*10 + sizeof(int) + sizeof(long int)) = NULL;
+  *(void**)(pessoa + sizeof(char)*10 + sizeof(int) + sizeof(long int) + sizeof(void*)) = NULL;
   
   if (*quantPessoas == 0) { 
     //armazenando pessoa na primeira posição da lista e da fila
@@ -108,16 +109,22 @@ void * inserir(void * pBuffer) {
     
     void * proximo = (void**)(pessoaAtual + sizeof(char)*10 + sizeof(int) + sizeof(long int));
 
-    while (proximo != NULL) { // ???
+    while (proximo != NULL) {
       pessoaAtual = proximo;
       proximo = &*(void**)(proximo + sizeof(char)*10 + sizeof(int) + sizeof(long int));
     }
 
     // pessoaAtual + sizeof(char)*10 + sizeof(int) + sizeof(long int) = &pessoa;
-    *(void**)(pessoaAtual + sizeof(char)*10 + sizeof(int) + sizeof(long int)) = pessoa; // ????
+    *(void**)(pessoaAtual + sizeof(char)*10 + sizeof(int) + sizeof(long int)) = pessoa;
 
-    
-    //testar nomes para inserir na posição certa da fila
+    // TRAVADA
+    // AQUI
+    // QUE
+    // ODIO !!!
+    // proximo = &pessoa; // armazenou -x61fe90 em *proximo
+    // printf("%s", (char*)proximo);
+
+    //testar nomes para inserir na fila
   }
 
   printf("char escolha = %c\n", *(char*)(pBuffer));
@@ -144,8 +151,11 @@ void * buscar(void * pBuffer) {
 
 }
 
-
-
+void listar(void * pBuffer) {
+  void * pessoaAtual = *(void **)(pBuffer + sizeof(char)*11 + sizeof(int)*2);
+  printf("%s - ", (char*)pessoaAtual);
+  printf("%d - ", *(int*)(pessoaAtual + sizeof(char)*10));
+  printf("%d", *(int*)(pessoaAtual + sizeof(char)*10 + sizeof(int)));
 
   // char * proximo = pessoaAtual;
     // int * proximo = (int*)(pessoaAtual + sizeof(char)*10);
