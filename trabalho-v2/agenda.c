@@ -109,22 +109,17 @@ void * inserir(void * pBuffer) {
     
     void * proximo = (void**)(pessoaAtual + sizeof(char)*10 + sizeof(int) + sizeof(long int));
 
-    while (proximo != NULL) {
+    while (proximo != NULL) { // ??
       pessoaAtual = proximo;
       proximo = &*(void**)(proximo + sizeof(char)*10 + sizeof(int) + sizeof(long int));
     }
 
     // pessoaAtual + sizeof(char)*10 + sizeof(int) + sizeof(long int) = &pessoa;
-    *(void**)(pessoaAtual + sizeof(char)*10 + sizeof(int) + sizeof(long int)) = pessoa;
+    *(void**)(pessoaAtual + sizeof(char)*10 + sizeof(int) + sizeof(long int)) = pessoa; // ??
 
-    // TRAVADA
-    // AQUI
-    // QUE
-    // ODIO !!!
-    // proximo = &pessoa; // armazenou -x61fe90 em *proximo
-    // printf("%s", (char*)proximo);
+    
 
-    //testar nomes para inserir na fila
+    //testar nomes para inserir na fila em ordem
   }
 
   printf("char escolha = %c\n", *(char*)(pBuffer));
