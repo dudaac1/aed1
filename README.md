@@ -30,6 +30,13 @@ O prefixo inicial ("aed?") no nome de cada pasta dos exercícios identificam a q
 - **aed2**: os exercicios tem seu conteúdo ligado à cadeira de Algoritmos e Estruturas de Dados II.
 
 Dentro de cada pasta, haverá um arquivo **.c** com o desenvolvimento do exercício (a descrição completa do mesmo estará comentado no corpo da resolução) e um arquivo **.txt** com testes para o desenvolvimento (este arquivo é *opcional*, portanto, algumas pastas podem não possui-lo).
+Todos os exercícios são passados no [Dr. Memory](https://drmemory.org/)  para verificar a não existência de *leaks* de memória.
+
+## exercícios
+Segue abaixo resumo da descrição dos exercícios solicitados:
+**exercicio 2:** programa que deve adicionar e remover nomes da mesma *string* sem haver desperdício de memória.
+**exercicio 3:** agenda de contatos (nome, idade, telefone) armazenada em `void * pBuffer`. usar de manipulação de memória.
+
  
 ## ⏯ executando os programas
 Para executar os programas, você precisará dos arquivos em seu PC. Faça download de cada arquivo .c separadamente ou clone o repositório:<br>
@@ -42,8 +49,7 @@ E depois execute o programa:<br>
 Para utilizar os arquivos teste.txt presente em algumas das pastas, baixe-os se não tiver feito, coloque na mesma pasta do arquivo .c e execute o programa (após compilação):<br>
 `.\nomeArquivo.exe < teste.txt`<br>
 
-<br>
 
-
+##
 *Eduarda A. Carvalho, abril/2021.<br>
 eduarda.carvalho@inf.ufpel.edu.br*
