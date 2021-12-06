@@ -16,18 +16,18 @@ Utilizar menu: adicionar nome, remover nome, listar, sair.
 typedef struct nome {
 	char * letras;
 	int tamanho;
-} NOME;
+} Nome;
 
 // prototipos
-NOME inserir(NOME lista);
-NOME remover(NOME lista);
-void listar(NOME lista);
-NOME lerNome(NOME nome, char * funcao); 
+Nome inserir(Nome lista);
+Nome remover(Nome lista);
+void listar(Nome lista);
+Nome lerNome(Nome nome, char * funcao); 
 void erroAloc(void);
 
 // funções
 int main() {
-	NOME lista;
+	Nome lista;
 	lista.letras = NULL;
 	lista.tamanho = 0;	
 	char escolha;
@@ -61,9 +61,9 @@ int main() {
 	} while (escolha != '4');
 }
 
-NOME inserir(NOME lista) {
+Nome inserir(Nome lista) {
 	printf("\n--- ADICIONANDO NOME ---\n");
-	NOME nome = lerNome(nome, "inserir");
+	Nome nome = lerNome(nome, "inserir");
 
 	if (nome.tamanho == 1) { // "#"
 		printf("Palavras vazias nao sao nomes.\n");
@@ -81,9 +81,9 @@ NOME inserir(NOME lista) {
 	return lista;
 }
 
-NOME remover(NOME lista) {
-	printf("\n--- REMOVENDO NOME ---\n");
-	NOME nome = lerNome(nome, "remover");
+Nome remover(Nome lista) {
+	printf("\n--- REMOVENDO NOMES ---\n");
+	Nome nome = lerNome(nome, "remover");
 
 	if (nome.tamanho == 1) { // "#"
 		printf("Palavras vazias nao sao nomes.\n");
@@ -113,7 +113,7 @@ NOME remover(NOME lista) {
 	return lista;
 }
 
-void listar(NOME lista) {
+void listar(Nome lista) {
 	printf("\n--- LISTANDO NOMES ---\n");
 	if (lista.tamanho == 0) {
 		printf("Nenhum nome encontrado.\n");
@@ -128,25 +128,20 @@ void listar(NOME lista) {
 	}
 }
 
-NOME lerNome(NOME nome, char * funcao) {
-	nome.letras = (char *)malloc(sizeof(char) * MAX_NOME+1);
+Nome lerNome(Nome nome, char * funcao) {
+	nome.letras = (char *)malloc(sizeof(char) * (MAX_NOME+1));
 	if (nome.letras == NULL) erroAloc();
-	nome.tamanho = 0;
-
 	printf("Qual nome voce deseja %s: ", funcao);
  	char letra;
-	for (int i = 0; (letra = getchar()) != '\n'; i++) 
-		if (nome.tamanho < MAX_NOME) 
-			nome.letras[nome.tamanho++] = letra;
-
-	if (nome.tamanho == MAX_NOME) {
-		nome.letras[MAX_NOME-1] = '#';
-		nome.letras[MAX_NOME] = '\0';
-	} else {
-		nome.letras[nome.tamanho++] = '#';
-		nome.letras[nome.tamanho] = '\0';
-	}
-
+	int i;
+	for (i = 0; (letra = getchar()) != '\n'; i++)
+		if (i < MAX_NOME)
+			nome.letras[i] = letra;
+	if (i >= MAX_NOME)
+		i = MAX_NOME - 1;
+	nome.letras[i++] = '#';
+	nome.letras[i] = '\0';
+	nome.tamanho = i;
 	return nome;
 }
 
