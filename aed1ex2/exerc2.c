@@ -129,7 +129,7 @@ void listar(Nome lista) {
 }
 
 Nome lerNome(Nome nome, char * funcao) {
-	nome.letras = (char *)malloc(sizeof(char) * (MAX_NOME+1));
+	nomgit ce.letras = (char *)malloc(sizeof(char) * (MAX_NOME+1));
 	if (nome.letras == NULL) erroAloc();
 	printf("Qual nome voce deseja %s: ", funcao);
  	char letra;
