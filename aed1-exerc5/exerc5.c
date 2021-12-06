@@ -2,145 +2,115 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct pessoa
-{
-    char nome[30];
-    int idade;
-    int altura;
-    struct pessoa *prox;
+/*
+EXERCICIO 5
+Programa que armazene informações de várias pessoas (struct: char nome[30]; int idade; int altura;).
+O programa só sai quando o usuário não desejar incluir mais pessoas.
+Antes de sair, mostrar os dados de todas as pessoas
+*/
+
+// constantes
+#define MAX_NOME 30
+
+// estruturas
+typedef struct pessoa {
+	char nome[MAX_NOME];
+	int idade;
+	int altura;
 } Pessoa;
 
-void Inserir(Pessoa **listaPessoas);
-void Listar(Pessoa *listaPessoas);
-void FinalizarPrograma(Pessoa *listaPessoas);
+typedef struct lista {
+	Pessoa * pessoas;
+	int quantidade;
+} Lista;
 
+// protótipos
+Lista inserir(Lista lista);
+void listar(Lista lista);
+
+// funções
 int main() {
-    Pessoa *listaPessoas = NULL; //o conteudo de listaPessoas = vazio/nulo
-    char escolha;
-    do {
-        printf("Inserir dados de uma pessoa? S - sim; N - nao:  ");
-        scanf(" %c%*[^\n]", &escolha);
-        switch (escolha) {
-        case 's':
-        case 'S':
-            printf("\n\t# INSERINDO NOVA PESSOA #\n");
-            Inserir(&listaPessoas); //enviando o endereço de memória de listaPessoas
-            break;
+	Lista lista;
+	lista.pessoas = NULL;
+	lista.quantidade = 0;
 
-        case 'n':
-        case 'N':
-            printf("\n\t# LISTANDO PESSOAS #\n");
-            Listar(listaPessoas);
-            printf("\nTchau!");
-            FinalizarPrograma(listaPessoas);
-            exit(0);
-
-        default:
-            printf("Opcao nao reconhecida.\n");
-            getchar();
-            break;
-        }
-    } while (escolha != 'n' || escolha == 'N');
+	char escolha;
+	do {
+		printf("Inserir dados de uma pessoa? (1) Sim - (2) Nao:  ");
+		scanf("%c[^\n]", &escolha);
+		getchar();
+		switch (escolha) {
+			case '1':
+				lista = inserir(lista);
+				break;
+			case '2':
+				listar(lista);
+				free(lista.pessoas);
+				printf("\nTchau!");
+				exit(0);
+		default:
+			printf("Opcao nao reconhecida.\n");
+			break;
+		}
+	} while (escolha != '2');
 }
 
-void Inserir(Pessoa **listaPessoas)
-{
-    getchar();
-    printf("Digite nome: ");
-    char nome[30], letra;
-    int i = 0;
-    while (((letra = getchar()) != '\n') && i < 30) { //caracter a caracter, inclusive espaços
-        nome[i] = letra;
-        i++;
-    }
-    if (i==30) { //teste para remover caracteres excedentes
-        while ((letra = getchar()) != '\n' && letra != EOF) {}
-        i--;
-    }
-    if (strlen(nome) == 0) {
+Lista inserir(Lista lista) {
+	printf("\n\t# INSERINDO NOVA PESSOA #\nDigite nome: ");
+	Pessoa novaPessoa;
+	char letra;
+	int i;
+	for (i = 0; (letra = getchar()) != '\n'; i++)
+		if (i < MAX_NOME)
+			novaPessoa.nome[i] = letra;
+	if (i >= MAX_NOME)
+		i = MAX_NOME - 1;
+	novaPessoa.nome[i] = '\0';
+	if (strlen(novaPessoa.nome) == 0) {
 		printf("Palavras vazias nao sao nomes.\n");
-		return;
+		return lista;
 	}
 
-    nome[i] = '\0';
+	printf("Digite idade: ");
+	scanf("%d", &novaPessoa.idade);
+	getchar();
+	while (novaPessoa.idade < 0) {
+		printf("Idade e positiva, insira outro valor: ");
+		scanf("%d", &novaPessoa.idade);
+		getchar();
+	}
 
-    int idade;
-    printf("Digite idade: ");
-    scanf("%d", &idade);
-    getchar();
-    while (idade < 0) {
-        printf("Idade e positiva, insira outro valor: ");
-        scanf("%d", &idade);
-        getchar();
-    }
+	printf("Agora sua altura (em cm): ");
+	scanf("%d", &novaPessoa.altura);
+	getchar();
+	while (novaPessoa.altura < 0) {
+		printf("Altura e positiva, insira outro valor: ");
+		scanf("%d", &novaPessoa.altura);
+		getchar();
+	}
 
-    int altura;
-    printf("Agora sua altura (em centimetros): ");
-    scanf("%d", &altura);
-    getchar();
-    while (altura < 0) {
-        printf("Altura e positiva, insira outro valor: ");
-        scanf("%d", &altura);
-        getchar();
-    }
-    while (altura > 300) {
-        printf("Eu nunca conheci alguem com mais de 3m. Insira outro valor: ");
-        scanf("%d", &altura);
-        getchar();
-    }
-
-    if (*listaPessoas == NULL) {
-        *listaPessoas = (Pessoa *)malloc(sizeof(Pessoa));
-        if(!listaPessoas) {
-            printf("Um erro inesperado aconteceu. Tente novamente mais tarde.\n");
-            return;
-        }
-        strcpy((*listaPessoas)->nome, nome);
-        (*listaPessoas)->altura = altura;
-        (*listaPessoas)->idade = idade;
-        (*listaPessoas)->prox = NULL;
-    }
-    else {
-        Pessoa *novaPessoa, *pessoaAtual;
-        pessoaAtual = *listaPessoas;
-        while (pessoaAtual->prox != NULL) {
-            pessoaAtual = pessoaAtual->prox;
-        }
-        novaPessoa = (Pessoa *)malloc(sizeof(Pessoa));
-        if(!novaPessoa) {
-            printf("Um erro inesperado aconteceu. Tente novamente mais tarde.\n");
-            return;
-        }
-        strcpy(novaPessoa->nome, nome);
-        novaPessoa->altura = altura;
-        novaPessoa->idade = idade;
-        novaPessoa->prox = NULL;
-        pessoaAtual->prox = novaPessoa;
-    }
-    printf("Novos dados incluido na lista.\n\n");
+	lista.quantidade++;
+	lista.pessoas = (Pessoa *)realloc(lista.pessoas, lista.quantidade * sizeof(Pessoa));
+	if (lista.pessoas == NULL) {
+		printf("Desculpe, tivemos um problema.");
+		exit(1);
+	}
+	lista.pessoas[lista.quantidade-1] = novaPessoa;
+	printf("Novos dados incluido na lista.\n\n");
+	return lista;
 }
 
-void Listar(Pessoa *listaPessoas) {
-    Pessoa *pessoaAtual = listaPessoas;
-    if (listaPessoas == NULL) {
-        printf("Nenhuma informacao encontrada.\n\n");
-    }
-    else {
-        while (pessoaAtual != NULL) {
-            printf("Nome: %s\n", pessoaAtual->nome);
-            printf("Idade: %d\n", pessoaAtual->idade);
-            printf("Altura: %d\n\n", pessoaAtual->altura);
-            pessoaAtual = pessoaAtual->prox;
-        }
-    }
-    getchar();
-}
+void listar(Lista lista) {
+	printf("\n\t# LISTANDO PESSOAS #\n");
+	if (!lista.quantidade) 
+		printf("Nenhum dado encontrado.\n\n");
+	else 
+		for (int i = 0; i < lista.quantidade; i++) {
+			printf("Nome: %s\n", lista.pessoas[i].nome);
+			printf("Idade: %d\n", lista.pessoas[i].idade);
+			printf("Altura: %d\n\n", lista.pessoas[i].altura);
+		}
 
-void FinalizarPrograma(Pessoa *listaPessoas) {
-    Pessoa *pessoaAtual = listaPessoas;
-    while (pessoaAtual != NULL) {
-        listaPessoas = pessoaAtual->prox;
-        free(pessoaAtual);
-        pessoaAtual = listaPessoas;
-    }
+	printf("Pressione ENTER para continuar... ");
+	getchar();
 }

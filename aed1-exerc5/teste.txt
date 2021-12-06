@@ -1,36 +1,29 @@
-s
+1
 Amelia
 23
 123
-
-S
+1
 Bernardo
 34
 156
-
-s
-Camilla Rivera
+1
+Camila Rivera
 47
 178
-
-S
-Daniella Vieira
+1
+Dani Cruz Vieira
 34
 175
-
-s
+1
 Eddy
 57
 174
-
-S
-Ferdinand, the Bull
+1
+Ferdinand
 36
 196
-
-s
-Geny
+1
+Gladys
 98
 178
-
-n
+2
