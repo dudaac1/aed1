@@ -13,6 +13,12 @@ Bernardo
 34
 156
 
+2
+Amelia
+
+2
+Bernardo
+
 1
 Camilla
 47
@@ -34,7 +40,7 @@ Fernand
 196
 
 1
-Geny
+Gigi Costa
 98
 178
 
@@ -42,18 +48,6 @@ Geny
 Ivan
 57
 189
-
-1
-Higor
-59
-128
-
-1
-Janice
-47
-145
-
-1
 
 4
 
@@ -64,7 +58,7 @@ Ivan
 Mirella
 
 2
-Amelia
+Eddy
 
 2
 Higor

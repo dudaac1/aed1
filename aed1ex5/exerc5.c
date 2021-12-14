@@ -71,23 +71,17 @@ Lista inserir(Lista lista) {
 		return lista;
 	}
 
-	printf("Digite idade: ");
-	scanf("%d", &novaPessoa.idade);
-	getchar();
-	while (novaPessoa.idade < 0) {
-		printf("Idade e positiva, insira outro valor: ");
+	do {
+		printf("Digite idade (valor positivo): ");
 		scanf("%d", &novaPessoa.idade);
 		getchar();
-	}
+	} while (novaPessoa.idade < 0);
 
-	printf("Agora sua altura (em cm): ");
-	scanf("%d", &novaPessoa.altura);
-	getchar();
-	while (novaPessoa.altura < 0) {
-		printf("Altura e positiva, insira outro valor: ");
+	do {
+		printf("Digite altura em centimetros (valor entre 0 e 300): ");
 		scanf("%d", &novaPessoa.altura);
 		getchar();
-	}
+	} while (novaPessoa.altura < 0 || novaPessoa.altura > 300);
 
 	lista.quantidade++;
 	lista.pessoas = (Pessoa *)realloc(lista.pessoas, lista.quantidade * sizeof(Pessoa));

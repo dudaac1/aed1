@@ -2,213 +2,179 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct pessoa
-{
+/*
+EXERCICIO 7
+Programa semelhante ao exercício 3 que deve armazenar no máximo 10 pessoas.
+Todas as variáveis que forem usadas devem ser ponteiros (com exceção da variável global Pessoa pessoas[10]),
+os quais devem apontar para a variável void * pBuffer, onde os dados devem ser armazenados. 
+*/
+
+// estruturas
+typedef struct pessoa {
     char nome[10];
     int idade;
     int altura;
 } Pessoa;
 
-Pessoa pessoas[10] = {};
+Pessoa pessoas[10];
 
-void *adicionar(void *pBuffer);
-void *remover(void *pBuffer);
-void *buscar(void *pBuffer);
-void listar(void *pBuffer);
-void esperePeloEnter(void);
+// constantes
+#define INT sizeof(int)
+#define ESCOLHA sizeof(char)
+#define NOME sizeof(char)*10
 
-int main()
-{
-    void *pBuffer;
-    pBuffer = malloc(sizeof(int) * 3 + sizeof(char) * 11);
-    // int, char, int, int, char[10] = tam, escolha, busca, i, nome[10]
+// protótipos
+void * adicionar(void * pBuffer);
+void * remover(void * pBuffer);
+void buscar(void * pBuffer);
+void * buscarIndice(void * pBuffer);
+void listar(void * pBuffer);
+void erroAloc();
 
-    if (pBuffer == NULL)
-    {
-        printf("Desculpa, tivemos um problema.\n");
-        exit(1);
-    }
+// funções
+int main() {
+    void * pBuffer = malloc(INT + ESCOLHA + INT + INT + NOME); // tam - escolha - busca - i - nome[10]
+    if (pBuffer == NULL) erroAloc();
     *(int *)pBuffer = 0;
+    char * escolha = (pBuffer + INT);
 
-    char *escolha = (pBuffer + sizeof(int));
-
-    do
-    {
-        printf("\n\t1) Adicionar\n");
-        printf("\t2) Remover\n");
-        printf("\t3) Buscar\n");
-        printf("\t4) Listar\n");
+    do {
+        printf("\n\t1) Adicionar pessoa\n");
+        printf("\t2) Remover pessoa\n");
+        printf("\t3) Buscar pessoa\n");
+        printf("\t4) Listar pessoas\n");
         printf("\t5) Sair\n");
         printf("Insira sua escolha: ");
-        scanf(" %c", escolha);
-        switch (*escolha)
-        {
-        case '1':
-            printf("\n\t # ADICIONANDO DADOS #\n");
-            pBuffer = adicionar(pBuffer);
-            esperePeloEnter();
-            break;
-        case '2':
-            printf("\n\t# REMOVENDO PESSOA #\n");
-            pBuffer = remover(pBuffer);
-            esperePeloEnter();
-            break;
-        case '3':
-            printf("\n\t# BUSCANDO ALGUEM #\n");
-            pBuffer = buscar(pBuffer);
-            int *busca = (pBuffer + sizeof(int) + sizeof(char));
-            if (*busca == -1)
-            {
-                printf("Esta pessoa nao foi encontrada.\n");
-            }
-            else
-            {
-                printf("%s, %d anos, %d cm.\n", pessoas[*busca].nome, pessoas[*busca].idade, pessoas[*busca].altura);
-            }
-            esperePeloEnter();
-            break;
-        case '4':
-            printf("\n\t # LISTANDO PESSOAS #.\n");
-            listar(pBuffer);
-            esperePeloEnter();
-            break;
-        case '5':
-            printf("Tchau!");
-            free(pBuffer);
-            exit(0);
-        default:
-            printf("Opcao nao reconhecida.\n");
-            esperePeloEnter();
+        scanf("%c", escolha);
+        getchar();
+        switch (*escolha) {
+            case '1':
+                pBuffer = adicionar(pBuffer);
+                break;
+            case '2':
+                pBuffer = remover(pBuffer);
+                break;
+            case '3':
+                buscar(pBuffer);
+                break;
+            case '4':
+                listar(pBuffer);
+                break;
+            case '5':
+                printf("Tchau!");
+                free(pBuffer);
+                exit(0);
+            default:
+                printf("Opcao nao reconhecida.\n");
         }
 
+        printf("\nPressione ENTER para continuar... ");
+        getchar();
     } while (*escolha != '5');
     return 0;
 }
 
-void *adicionar(void *pBuffer)
-{
-    int *tam = pBuffer;
-
-    if (*tam == 10)
-    {
+void * adicionar(void * pBuffer) {
+    printf("\n\t # ADICIONANDO DADOS #\n");
+    if (*(int*)pBuffer == 10) {
         printf("A lista de pessoas esta cheia.\n");
         return pBuffer;
     }
 
+    int * tam = pBuffer;
     printf("Insira nome: ");
     scanf("%s[^\n]", pessoas[*tam].nome);
+    getchar();
 
-    printf("Insira idade: ");
-    scanf("%d", &pessoas[*tam].idade);
-    while (pessoas[*tam].idade < 0)
-    {
-        printf("Idade e positiva, insira outro valor: ");
+    do {
+        printf("Insira idade (valor positivo): ");
         scanf("%d", &pessoas[*tam].idade);
         getchar();
-    }
+    } while (pessoas[*tam].idade < 0);
 
-    printf("Insira altura (em centimetros): ");
-    scanf("%d", &pessoas[*tam].altura);
-    while (pessoas[*tam].altura < 0 || pessoas[*tam].altura > 300)
-    {
-        printf("Insira um valor de 0 a 300: ");
+    do {
+        printf("Insira altura em centimetros (valor entre 0 e 300): ");
         scanf("%d", &pessoas[*tam].altura);
         getchar();
-    }
+    } while (pessoas[*tam].altura < 0 || pessoas[*tam].altura > 300);
 
-    printf("Dados adicionados com sucesso!\n");
-
-    *tam = *tam + 1;
+    (*tam)++;
+    printf("\nDados adicionados.\n");
     return pBuffer;
 }
 
-void *remover(void *pBuffer)
-{
-    pBuffer = buscar(pBuffer);
+void * remover(void *pBuffer) {
+    printf("\n\t# REMOVENDO PESSOA #\n");
+    pBuffer = buscarIndice(pBuffer);
 
-    int *busca = (pBuffer + sizeof(int) + sizeof(char));
-    if (*busca == -1)
-    {
-        printf("Nao posso remover esta pessoa, pois ela nao esta na lista.\n");
+    if (*(int*)(pBuffer + INT + ESCOLHA) == -1) {
+        printf("Pessoa nao encontrada.\n");
         return pBuffer;
     }
-    int *tam = pBuffer;
 
-    if (*busca + 1 < *tam) // se busca+1 < tam || busca != 1
-    {
+    int * i = (pBuffer + INT + ESCOLHA + INT);
+    int * busca = (pBuffer + INT + ESCOLHA);
+    for (*i = *busca; *i < ((*(int*)pBuffer) - 1); (*i)++)
+        pessoas[*i] = pessoas[*i + 1];
 
-        if (pBuffer == NULL)
-        {
-            printf("Desculpa, tivemos um problema.\n");
-            exit(1);
-        }
-        int *i = (pBuffer + sizeof(int) + sizeof(char) + sizeof(int));
-
-        for (*i = *busca; *i < *tam - 1; *i = *i + 1)
-        {
-            pessoas[*i] = pessoas[*i + 1];
-        }
-    }
-
-    *tam = *tam - 1;
-    printf("Pessoa removida com sucesso da lista!\n");
+    (*(int*)pBuffer)--;
+    printf("\nPessoa removida.\n");
     return pBuffer;
 }
 
-void *buscar(void *pBuffer)
-{
-    int *tam = pBuffer;
-    if (pBuffer == NULL)
-    {
-        printf("Desculpa, tivemos um problema.\n");
-        exit(1);
-    }
+void buscar(void * pBuffer) {
+    printf("\n\t# BUSCANDO PESSOA #\n");
+    pBuffer = buscarIndice(pBuffer);
+    int * busca = (pBuffer + INT + ESCOLHA);
+    if (*busca == -1)
+        printf("Pessoa nao encontrada.\n");
+    else
+        printf("%s, %d anos, %d cm.\n", pessoas[*busca].nome, pessoas[*busca].idade, pessoas[*busca].altura);
+}
 
-    char *nome = (pBuffer + sizeof(int) + sizeof(char) + sizeof(int) * 2);
+void * buscarIndice(void *pBuffer) {
+    int  *tam = pBuffer;
+    if (pBuffer == NULL) erroAloc();
+
+    char * nome = (pBuffer + INT + ESCOLHA + INT + INT);
     printf("Insira o nome: ");
     scanf("%s", nome);
+    getchar();
 
-    if (*tam == 0)
-    {
-        *(int *)(pBuffer + sizeof(int) + sizeof(char)) = -1;
+    if (*tam == 0) {
+        *(int *)(pBuffer + INT + ESCOLHA) = -1;
         return pBuffer;
     }
 
-    int *i = (pBuffer + sizeof(int) + sizeof(char) + sizeof(int));
-    for (*i = 0; *i < *tam; *i = *i + 1)
-    {
-        if (strcmp(nome, pessoas[*i].nome) == 0)
-        {
-            *(int *)(pBuffer + sizeof(int) + sizeof(char)) = *i;
+    int * i = (pBuffer + INT + ESCOLHA + INT);
+    for (*i = 0; *i < *tam; (*i)++) {
+        if (strcmp(nome, pessoas[*i].nome) == 0) {
+            *(int *)(pBuffer + INT + ESCOLHA) = *i; // busca = i e retorna
             return pBuffer;
         }
     }
 
-    *(int *)(pBuffer + sizeof(int) + sizeof(char)) = -1;
+    *(int *)(pBuffer + INT + ESCOLHA) = -1;
     return pBuffer;
 }
 
-void listar(void *pBuffer)
-{
+void listar(void *pBuffer) {
+    printf("\n\t # LISTANDO PESSOAS #\n");
     int *tam = pBuffer;
-    if (*tam == 0)
-    {
+    if (*tam == 0) {
         printf("Nenhum dado encontrado.\n");
         return;
     }
 
-    int *i = (pBuffer + sizeof(int) + sizeof(char));
-    for (*i = 0; *i < *tam; *i = *i + 1)
-    {
+    int *i = (pBuffer + INT + ESCOLHA);
+    for (*i = 0; *i < *tam; (*i)++) {
         printf("\nNome: %s\n", pessoas[*i].nome);
         printf("Idade: %d anos\n", pessoas[*i].idade);
         printf("Altura: %d cm\n", pessoas[*i].altura);
     }
 }
 
-void esperePeloEnter()
-{
-    printf("\nPressione ENTER para continuar... ");
-    getchar();
-    getchar();
+void erroAloc() {
+    printf("Desculpe, tivemos um problema. \n");
+    exit(1);
 }
