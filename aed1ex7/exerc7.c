@@ -4,7 +4,7 @@
 
 /*
 EXERCICIO 7
-Programa semelhante ao exercício 3 que deve armazenar no máximo 10 pessoas.
+Programa semelhante ao exercício 3, sendo que este deve armazenar no máximo 10 pessoas.
 Todas as variáveis que forem usadas devem ser ponteiros (com exceção da variável global Pessoa pessoas[10]),
 os quais devem apontar para a variável void * pBuffer, onde os dados devem ser armazenados. 
 */
