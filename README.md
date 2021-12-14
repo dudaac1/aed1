@@ -37,6 +37,7 @@ Segue abaixo resumo da descrição dos exercícios solicitados:<br>
 - **exercício 2:** programa que deve adicionar e remover nomes da mesma *string* sem haver desperdício de memória.<br>
 - **exercício 3:** agenda de contatos (nome, idade, telefone) armazenada em `void * pBuffer`. usar de manipulação de memória.<br>
 - **exercício 5:** adicionar quantas pessoas (nome[30], idade, altura) o usuário desejar e, antes de sair, listar os dados.<br>
+- **exercicio 7:** armazenar pessoas em Pessoa pessoas[10] com todas as variáveis sendo ponteiros para `void * pBuffer`.<br>
 
  
 ## ⏯ executando os programas
